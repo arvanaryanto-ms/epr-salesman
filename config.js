@@ -1,3 +1,3 @@
 const CONFIG = {
-    API: 'https://jefferson-liked-village-lines.trycloudflare.com'
+    API: 'https://oecd-number-pichunter-quiet.trycloudflare.com'
 };

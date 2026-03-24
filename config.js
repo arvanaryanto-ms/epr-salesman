@@ -1,3 +1,3 @@
 const CONFIG = {
-    API: 'https://initial-clear-prize-mold.trycloudflare.com'
+    API: 'https://jefferson-liked-village-lines.trycloudflare.com'
 };

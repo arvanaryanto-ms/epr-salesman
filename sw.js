@@ -1,5 +1,10 @@
-const CACHE = 'epr-v1';
-const ASSETS = ['/', '/index.html', '/manifest.json'];
+const CACHE = 'epr-v2';
+const ASSETS = [
+  '/epr-salesman/',
+  '/epr-salesman/index.html',
+  '/epr-salesman/manifest.json',
+  '/epr-salesman/config.js'
+];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));

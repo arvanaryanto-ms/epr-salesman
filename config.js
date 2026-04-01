@@ -1,3 +1,3 @@
 const CONFIG = {
-    API: 'https://oecd-number-pichunter-quiet.trycloudflare.com'
+    API: 'https://specialty-pamela-contents-installing.trycloudflare.com'
 };

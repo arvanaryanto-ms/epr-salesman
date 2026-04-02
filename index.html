@@ -314,7 +314,6 @@ function renderToday(){
   let html='';
   data.forEach((r,i)=>{
     const sudahAbsen=r.STATUS_ABSEN==='ABSEN';
-    const belumAbsen=!sudahAbsen;
     const ecPctRow=r.RPS>0?(r.EC/r.RPS*100).toFixed(1):'0.0';
     const omset=r.OMSET_TOTAL||'0';
     const cardClass=sudahAbsen?'hadir':'belum';
@@ -329,7 +328,7 @@ function renderToday(){
         <div class="stat-box"><div class="stat-val ${cv(r.RPS)}">${f(r.RPS)}</div><div class="stat-lbl">RPS</div></div>
         <div class="stat-box"><div class="stat-val ${cv(r.ACTUAL_CALL)}">${f(r.ACTUAL_CALL)}</div><div class="stat-lbl">CALL</div></div>
         <div class="stat-box"><div class="stat-val ${cv(r.EC)}">${f(r.EC)}</div><div class="stat-lbl">EC</div></div>
-        <div class="stat-box"><div class="stat-val ${ecColor(ecPctRow)}">${absen?'0%':ecPctRow+'%'}</div><div class="stat-lbl">EC%</div></div>
+        <div class="stat-box"><div class="stat-val ${ecColor(ecPctRow)}">${ecPctRow}%</div><div class="stat-lbl">EC%</div></div>
       </div>
       <div class="card-omset">
         <div><div class="omset-label">Omset Total</div><div class="omset-val ${omset==='0'?'zero':''}">${omset==='0'?'—':'Rp '+omset}</div></div>

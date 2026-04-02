@@ -78,7 +78,7 @@ body{background:var(--bg);font-family:var(--mono);min-height:100vh;display:flex;
 .list::-webkit-scrollbar{width:2px;}.list::-webkit-scrollbar-thumb{background:var(--border2);}
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;transition:border-color 0.15s;position:relative;overflow:hidden;}
 .card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
-.card.hadir::before{background:var(--green);}.card.absen::before{background:var(--red);}
+.card.hadir::before{background:var(--green);}.card.absen::before{background:var(--red);}.card.belum::before{background:var(--yellow);}
 .card:hover{border-color:var(--border2);}
 .card-rank{position:absolute;top:8px;right:10px;font-size:10px;font-weight:700;color:var(--text3);}
 .card-rank.gold{color:#ffd700;}.card-rank.silver{color:#c0c0c0;}.card-rank.bronze{color:#cd7f32;}
@@ -89,6 +89,7 @@ body{background:var(--bg);font-family:var(--mono);min-height:100vh;display:flex;
 .badge{font-size:8px;font-weight:700;padding:3px 7px;border-radius:3px;letter-spacing:1px;flex-shrink:0;}
 .badge-hadir{background:rgba(74,222,128,0.1);color:#86efac;border:1px solid rgba(74,222,128,0.25);}
 .badge-absen{background:rgba(248,113,113,0.1);color:#fca5a5;border:1px solid rgba(248,113,113,0.25);}
+.badge-belum{background:rgba(251,191,36,0.1);color:#fde68a;border:1px solid rgba(251,191,36,0.25);}
 .card-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:6px;}
 .stat-box{background:var(--bg3);border-radius:5px;padding:5px 4px;text-align:center;border:1px solid var(--border);}
 .stat-val{font-size:13px;font-weight:700;color:#fff;}.stat-lbl{font-size:8px;color:var(--text2);margin-top:1px;}
@@ -296,7 +297,7 @@ function renderDash(){currentMode==='today'?renderToday():renderMtd();}
 
 function renderToday(){
   const data=salesData;
-  const hadir=data.filter(r=>r.ACTUAL_CALL>0).length;
+  const hadir=data.filter(r=>r.STATUS_ABSEN==='ABSEN').length;
   const totalCall=data.reduce((a,r)=>a+(r.ACTUAL_CALL||0),0);
   const totalEc=data.reduce((a,r)=>a+(r.EC||0),0);
   const totalRps=data.reduce((a,r)=>a+(r.RPS||0),0);
@@ -312,13 +313,17 @@ function renderToday(){
   </div>`;
   let html='';
   data.forEach((r,i)=>{
-    const absen=!r.ACTUAL_CALL||r.ACTUAL_CALL==0;
+    const sudahAbsen=r.STATUS_ABSEN==='ABSEN';
+    const belumAbsen=!sudahAbsen;
     const ecPctRow=r.RPS>0?(r.EC/r.RPS*100).toFixed(1):'0.0';
     const omset=r.OMSET_TOTAL||'0';
-    html+=`<div class="card ${absen?'absen':'hadir'}" onclick="showDetail(${i})">
+    const cardClass=sudahAbsen?'hadir':'belum';
+    const badgeClass=sudahAbsen?'badge-hadir':'badge-belum';
+    const badgeText=sudahAbsen?'HADIR':'BELUM ABSEN';
+    html+=`<div class="card ${cardClass}" onclick="showDetail(${i})">
       <div class="card-top">
         <div><div class="card-id">${r.SLSCODE}</div><div class="card-name">${r.SLSNAME}</div><div class="card-team">${r.SALESMAN_TEAM} · ${r.BRANCH}</div></div>
-        <span class="badge ${absen?'badge-absen':'badge-hadir'}">${absen?'ABSEN':'HADIR'}</span>
+        <span class="badge ${badgeClass}">${badgeText}</span>
       </div>
       <div class="card-stats">
         <div class="stat-box"><div class="stat-val ${cv(r.RPS)}">${f(r.RPS)}</div><div class="stat-lbl">RPS</div></div>
@@ -453,7 +458,7 @@ function showDetail(i){
       <div class="detail-row"><span class="detail-key">Nama</span><span class="detail-val">${r.SLSNAME}</span></div>
       <div class="detail-row"><span class="detail-key">Team</span><span class="detail-val">${r.SALESMAN_TEAM}</span></div>
       <div class="detail-row"><span class="detail-key">Cabang</span><span class="detail-val">${r.BRANCH}</span></div>
-      <div class="detail-row"><span class="detail-key">Status</span><span class="detail-val ${r.ACTUAL_CALL>0?'c-green':'c-red'}">${r.ACTUAL_CALL>0?'HADIR':'ABSEN'}</span></div>
+      <div class="detail-row"><span class="detail-key">Status</span><span class="detail-val ${r.STATUS_ABSEN==='ABSEN'?'c-green':'c-yellow'}">${r.STATUS_ABSEN==='ABSEN'?'HADIR':'BELUM ABSEN'}</span></div>
     </div>
     <div class="detail-section"><div class="detail-section-title">Kunjungan</div>
       <div class="detail-row"><span class="detail-key">RPS (Rencana)</span><span class="detail-val ${cv(r.RPS)}">${f(r.RPS)}</span></div>
